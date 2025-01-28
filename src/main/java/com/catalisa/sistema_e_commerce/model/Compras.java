@@ -1,4 +1,4 @@
-package com.catalisa.sistema_e_commerce.main;
+package com.catalisa.sistema_e_commerce.model;
 
 import java.util.ArrayList;
 
