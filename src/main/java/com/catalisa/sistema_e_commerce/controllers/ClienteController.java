@@ -1,8 +1,8 @@
 package com.catalisa.sistema_e_commerce.controllers;
 
 import com.catalisa.sistema_e_commerce.models.Cliente;
-import com.catalisa.sistema_e_commerce.models.Produto;
 import com.catalisa.sistema_e_commerce.services.ClienteService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +20,11 @@ public class ClienteController {
         this.service = service;
     }
 
+    @Transactional
     @PostMapping
     public ResponseEntity<Cliente> criarCliente(@Valid @RequestBody Cliente cliente) {
-        return ResponseEntity.ok(service.criarCliente(cliente));
+        Cliente clienteSalvo = service.criarCliente(cliente);
+        return ResponseEntity.ok().body(clienteSalvo);
     }
 
     @PutMapping("/{cpf}")
