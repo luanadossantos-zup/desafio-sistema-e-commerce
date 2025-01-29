@@ -7,6 +7,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProdutoService {
 
@@ -19,5 +22,12 @@ public class ProdutoService {
         ProdutoEntity savedEntity = produtoRepository.save(entity);
         return new Produto(savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getQuantidade());
     }
+
+    public List<Produto> listarTodosProdutos() {
+        return produtoRepository.findAll().stream()
+                .map(entity -> new Produto(entity.getNome(), entity.getPreco(), entity.getQuantidade()))
+                .collect(Collectors.toList());
+    }
+
 
 }
