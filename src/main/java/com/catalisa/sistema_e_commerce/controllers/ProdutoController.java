@@ -23,13 +23,14 @@ public class ProdutoController {
         return ResponseEntity.ok(service.criarProduto(produto));
     }
 
-    @PutMapping("/{name}")
+    @PutMapping("/{nome}")
     public ResponseEntity<Produto> atualizarProduto (@Valid @PathVariable String nome, @RequestBody Produto produto) {
         return ResponseEntity.ok(service.atualizaProduto(nome, produto));
     }
 
     @DeleteMapping("/{nome}")
     public ResponseEntity<Void> deletarProduto (@Valid @PathVariable String nome) {
+        service.excluirProduto(nome);
         return ResponseEntity.noContent().build();
     }
 
