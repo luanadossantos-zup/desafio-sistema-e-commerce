@@ -2,18 +2,20 @@ package com.catalisa.sistema_e_commerce.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.data.annotation.Id;
+
 
 @Entity
 public class ProdutoEntity {
 
 
-    @Id
+
     @NotNull(message = "O nome não pode estar em branco!")
     @Column(unique = true)
+    @Id
     private String nome;
 
     @NotNull(message = "O preço não pode estar em branco!")

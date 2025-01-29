@@ -2,10 +2,11 @@ package com.catalisa.sistema_e_commerce.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.data.annotation.Id;
+
 
 @Entity
 public class ClienteEntity {
@@ -13,10 +14,11 @@ public class ClienteEntity {
     @NotNull(message = "O nome não pode estar em branco!")
     private String nome;
 
-    @Id
+
     @NotNull(message = "O CPF não pode estar em branco!")
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos!")
     @Column(unique = true)
+    @Id
     private String cpf;
 
     @Email
