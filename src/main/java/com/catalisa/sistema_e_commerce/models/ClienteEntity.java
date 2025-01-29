@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -16,7 +17,7 @@ public class ClienteEntity {
 
 
     @NotNull(message = "O CPF não pode estar em branco!")
-    @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos!")
+    @Size(min = 11, max = 11, message = "O CPF deve conter exatamente 11 dígitos!")
     @Column(unique = true)
     @Id
     private String cpf;
