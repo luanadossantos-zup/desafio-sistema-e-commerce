@@ -20,8 +20,15 @@ public class ProdutoService {
 
     public Produto criarProduto(@Valid Produto produto) {
         ProdutoEntity entidade = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
-        ProdutoEntity entidadeSalva = produtoRepository.save(entidade);
-        return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
+
+        if(produtoRepository.existsById(entidade.getNome())) {
+            throw new RuntimeException("Produto com o nome " + entidade.getNome() + " já existe!");
+        } else {
+            ProdutoEntity entidadeSalva = produtoRepository.save(entidade);
+            return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
+        }
+
+
     }
 
     public Produto atualizaProduto(@Valid String nomeId, Produto produtoAtualizado) {
@@ -33,8 +40,6 @@ public class ProdutoService {
         entidadeExistente.setNome(produtoAtualizado.nome());
         entidadeExistente.setPreco(produtoAtualizado.preco());
         entidadeExistente.setQuantidade(produtoAtualizado.quantidade());
-
-
 
 
         ProdutoEntity entidadeSalva = produtoRepository.save(entidadeExistente);
