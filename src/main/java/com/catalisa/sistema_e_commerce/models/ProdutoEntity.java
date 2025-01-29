@@ -3,6 +3,7 @@ package com.catalisa.sistema_e_commerce.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 
@@ -20,6 +21,7 @@ public class ProdutoEntity {
     private Double preco;
 
     @NotNull(message = "A quantidade não pode estar em branco!")
+    @Min(value = 0, message = "Quantidade mínima não pode ser negativa!")
     private int quantidade;
 
     public ProdutoEntity() {
