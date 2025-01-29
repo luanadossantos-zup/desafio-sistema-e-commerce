@@ -1,9 +1,8 @@
-package com.catalisa.sistema_e_commerce.model;
+package com.catalisa.sistema_e_commerce.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.Id;

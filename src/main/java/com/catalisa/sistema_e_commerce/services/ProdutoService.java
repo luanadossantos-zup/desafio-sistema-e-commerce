@@ -1,7 +1,7 @@
 package com.catalisa.sistema_e_commerce.services;
 
-import com.catalisa.sistema_e_commerce.model.Produto;
-import com.catalisa.sistema_e_commerce.model.ProdutoEntity;
+import com.catalisa.sistema_e_commerce.models.Produto;
+import com.catalisa.sistema_e_commerce.models.ProdutoEntity;
 import com.catalisa.sistema_e_commerce.repository.ProdutoRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +15,7 @@ public class ProdutoService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    private final String PRODUTO_SERVICE = "ProductService:: ";
 
 
     public Produto criarProduto(@Valid Produto produto) {
@@ -29,5 +30,17 @@ public class ProdutoService {
                 .collect(Collectors.toList());
     }
 
+    public void excluirProduto(String nomeId) {
+
+        boolean existingEntity = produtoRepository.existsById(nomeId);
+
+        if (existingEntity) {
+            produtoRepository.deleteById(nomeId);
+        } else {
+            System.out.println(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado.");
+            throw new RuntimeException("Produto com o nome " + nomeId + " não foi encontrado.");
+        }
+
+    }
 
 }
