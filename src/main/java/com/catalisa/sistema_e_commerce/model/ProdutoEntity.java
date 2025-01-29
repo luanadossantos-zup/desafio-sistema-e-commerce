@@ -5,7 +5,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class ProdutoEntity {
 
-    private int id;
+
     private String nome;
     private Double preco;
     private int quantidade;
@@ -14,19 +14,10 @@ public class ProdutoEntity {
 
     }
 
-    public ProdutoEntity(int id, String nome, Double preco, int quantidade) {
-        this.id = id;
+    public ProdutoEntity(String nome, Double preco, int quantidade) {
         this.nome = nome;
         this.preco = preco;
         this.quantidade = quantidade;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNome() {
