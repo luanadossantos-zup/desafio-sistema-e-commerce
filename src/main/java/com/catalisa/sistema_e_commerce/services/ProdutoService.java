@@ -45,9 +45,9 @@ public class ProdutoService {
 
     public void excluirProduto(String nomeId) {
 
-        boolean entidadeExistente = produtoRepository.existsById(nomeId);
+        boolean entidadeExiste = produtoRepository.existsById(nomeId);
 
-        if (entidadeExistente) {
+        if (entidadeExiste) {
             produtoRepository.deleteById(nomeId);
         } else {
             System.out.println(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado.");
