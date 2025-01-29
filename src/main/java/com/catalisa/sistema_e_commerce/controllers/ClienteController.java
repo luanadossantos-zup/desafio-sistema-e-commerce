@@ -28,13 +28,13 @@ public class ClienteController {
     }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<Cliente> atualizarCliente (@Valid @PathVariable String cpfId, @RequestBody Cliente cliente) {
-        return ResponseEntity.ok(service.atualizarCliente(cpfId, cliente));
+    public ResponseEntity<Cliente> atualizarCliente (@Valid @PathVariable String cpf, @RequestBody Cliente cliente) {
+        return ResponseEntity.ok(service.atualizarCliente(cpf, cliente));
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> deletarCliente (@Valid @PathVariable String cpfId) {
-        service.excluirCliente(cpfId);
+    public ResponseEntity<Void> deletarCliente (@Valid @PathVariable String cpf) {
+        service.excluirCliente(cpf);
         return ResponseEntity.noContent().build();
     }
 
