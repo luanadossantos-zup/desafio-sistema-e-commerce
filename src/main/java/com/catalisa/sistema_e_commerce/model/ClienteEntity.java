@@ -1,23 +1,28 @@
 package com.catalisa.sistema_e_commerce.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import org.springframework.data.annotation.Id;
 
 @Entity
 public class ClienteEntity {
 
+    @NotNull(message = "O nome não pode estar em branco!")
     private String nome;
 
     @Id
-    @NotBlank(message = "O CPF não pode estar em branco!")
+    @NotNull(message = "O CPF não pode estar em branco!")
     @Pattern(regexp = "\\d{11}", message = "O CPF deve conter exatamente 11 dígitos!")
+    @Column(unique = true)
     private String cpf;
 
     @Email
-    @NotBlank(message = "O email não pode estar em branco!")
+    @NotNull(message = "O email não pode estar em branco!")
+    @Column(unique = true)
     private String email;
 
     public ClienteEntity() {
