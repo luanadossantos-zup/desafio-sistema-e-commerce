@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/clientes")
 public class ClienteController {
@@ -32,5 +34,10 @@ public class ClienteController {
     public ResponseEntity<Void> deletarCliente (@Valid @PathVariable String cpfId) {
         service.excluirCliente(cpfId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public  ResponseEntity<List<Cliente>> listarTodosClientes () {
+        return ResponseEntity.ok(service.listarTodosClientes());
     }
 }
