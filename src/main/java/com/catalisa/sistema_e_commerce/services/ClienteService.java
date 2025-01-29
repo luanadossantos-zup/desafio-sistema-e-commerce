@@ -20,19 +20,30 @@ public class ClienteService {
     public Cliente criarCliente(@Valid Cliente cliente) {
         ClienteEntity entidade = new ClienteEntity(cliente.nome(), cliente.cpf(), cliente.email());
 
-        if(clienteRepository.existsById(entidade.getCpf())) {
-            throw new RuntimeException("Cliente com o cpf " + entidade.getCpf() + " já existe!");
-        } else {
-            ClienteEntity entidadeSalva = clienteRepository.save(entidade);
-            return new Cliente(entidadeSalva.getNome(), entidadeSalva.getCpf(), entidadeSalva.getEmail());
-        }
+        validaCpf(entidade);
+        validaEmail(entidade);
+
+        ClienteEntity entidadeSalva = clienteRepository.save(entidade);
+        return new Cliente(entidadeSalva.getNome(), entidadeSalva.getCpf(), entidadeSalva.getEmail());
 
     }
 
-    public Cliente atualizarCliente (@Valid String cpfId,Cliente clienteAtualizado) {
+    private void validaCpf(ClienteEntity entidade) {
+        if(clienteRepository.existsById(entidade.getCpf())) {
+            throw new RuntimeException("Cliente com o cpf " + entidade.getCpf() + " já existe!");
+        }
+    }
 
-        ClienteEntity entidadeExistente = clienteRepository.findById(cpfId)
-                .orElseThrow(() -> new RuntimeException(CLIENTE_SERVICE + "produto com o nome " + cpfId + " não foi encontrado."));
+    private void validaEmail(ClienteEntity entidade) {
+        if (clienteRepository.existsByEmail(entidade.getEmail())) {
+            throw new RuntimeException("Cliente com o e-mail " + entidade.getEmail() + " já existe!");
+        }
+    }
+
+    public Cliente atualizarCliente (@Valid String cpf,Cliente clienteAtualizado) {
+
+        ClienteEntity entidadeExistente = clienteRepository.findById(cpf)
+                .orElseThrow(() -> new RuntimeException(CLIENTE_SERVICE + "produto com o nome " + cpf + " não foi encontrado."));
 
         entidadeExistente.setNome(clienteAtualizado.nome());
         entidadeExistente.setCpf(clienteAtualizado.cpf());
@@ -47,12 +58,12 @@ public class ClienteService {
 
         boolean entidadeExiste = clienteRepository.existsById(cpfId);
 
-        if (entidadeExiste) {
-            clienteRepository.deleteById(cpfId);
-        } else {
+        if (!entidadeExiste) {
             System.out.println(CLIENTE_SERVICE + "cliente com o cpf " + cpfId + " não foi encontrado.");
             throw new RuntimeException("Cliente com o cpf " + cpfId + " não foi encontrado.");
         }
+
+        clienteRepository.deleteById(cpfId);
     }
 
     public List<Cliente> listarTodosClientes() {
