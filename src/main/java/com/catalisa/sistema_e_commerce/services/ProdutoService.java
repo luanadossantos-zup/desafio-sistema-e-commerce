@@ -19,28 +19,47 @@ public class ProdutoService {
 
 
     public Produto criarProduto(@Valid Produto produto) {
-        ProdutoEntity entity = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
-        ProdutoEntity savedEntity = produtoRepository.save(entity);
-        return new Produto(savedEntity.getNome(), savedEntity.getPreco(), savedEntity.getQuantidade());
+        ProdutoEntity entidade = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
+        ProdutoEntity entidadeSalva = produtoRepository.save(entidade);
+        return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
     }
 
-    public List<Produto> listarTodosProdutos() {
-        return produtoRepository.findAll().stream()
-                .map(entity -> new Produto(entity.getNome(), entity.getPreco(), entity.getQuantidade()))
-                .collect(Collectors.toList());
+    public Produto atualizaProduto(@Valid String nomeId, Produto produtoAtualizado) {
+
+        ProdutoEntity entidadeExistente = produtoRepository.findById(nomeId)
+                .orElseThrow(() -> new RuntimeException(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado."));
+
+
+        entidadeExistente.setNome(produtoAtualizado.nome());
+        entidadeExistente.setPreco(produtoAtualizado.preco());
+        entidadeExistente.setQuantidade(produtoAtualizado.quantidade());
+
+
+
+
+        ProdutoEntity entidadeSalva = produtoRepository.save(entidadeExistente);
+
+
+        return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
     }
 
     public void excluirProduto(String nomeId) {
 
-        boolean existingEntity = produtoRepository.existsById(nomeId);
+        boolean entidadeExistente = produtoRepository.existsById(nomeId);
 
-        if (existingEntity) {
+        if (entidadeExistente) {
             produtoRepository.deleteById(nomeId);
         } else {
             System.out.println(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado.");
             throw new RuntimeException("Produto com o nome " + nomeId + " não foi encontrado.");
         }
 
+    }
+
+    public List<Produto> listarTodosProdutos() {
+        return produtoRepository.findAll().stream()
+                .map(entity -> new Produto(entity.getNome(), entity.getPreco(), entity.getQuantidade()))
+                .collect(Collectors.toList());
     }
 
 }
