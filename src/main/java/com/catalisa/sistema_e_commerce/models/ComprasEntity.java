@@ -1,9 +1,14 @@
 package com.catalisa.sistema_e_commerce.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.util.ArrayList;
 
+@Entity
 public class ComprasEntity {
 
+    @Id
     private String cpf;
 
     private ArrayList<Produto> produtos;
