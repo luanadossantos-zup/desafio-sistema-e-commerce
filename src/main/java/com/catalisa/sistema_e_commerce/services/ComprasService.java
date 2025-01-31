@@ -4,10 +4,12 @@ import com.catalisa.sistema_e_commerce.models.*;
 import com.catalisa.sistema_e_commerce.repository.ClienteRepository;
 import com.catalisa.sistema_e_commerce.repository.ComprasRepository;
 import com.catalisa.sistema_e_commerce.repository.ProdutoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ComprasService {
@@ -21,44 +23,62 @@ public class ComprasService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    public Compras fazCompra(@Valid Compras compras) {
 
-    private final String COMPRAS_SERVICE = "ClienteService:: ";
+        validarCpf(compras);
 
 
-    public Compras fazCompra (Compras compras) {
+        List<String> listaDeProdutosIndisponiveis = new ArrayList<>();
+        List<ProdutoEntity> produtosParaAtualizar = new ArrayList<>();
+        List<CarrinhoEntity> carrinhoEntities = new ArrayList<>();
 
-        if (compras == null) {
-            throw new RuntimeException(COMPRAS_SERVICE + "a compra não pode ser nulo");
-        }
+        for (Carrinho produtoCarrinho : compras.produtos()) {
+            ProdutoEntity produtoEntity = validarExistenciaProduto(produtoCarrinho);
 
-        ComprasEntity entidade = new ComprasEntity(compras.cpf(), compras.produto());
+            boolean produtoSemEstoque = produtoEntity.getQuantidade() <= 0;
 
-        ComprasEntity entidadeSalva = comprasRepository.save(entidade);
-
-        ClienteEntity clienteEntity = clienteRepository
-                .findById(compras.cpf())
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-
-        // Lista para armazenar os produtos encontrados
-        ArrayList<Produto> produtosEncontrados = new ArrayList<>();
-
-        // Itera sobre os produtos da compra
-        for (Produto produto : compras.produto()) {
-            ProdutoEntity produtoEntity = produtoRepository
-                    .findById(produto.nome())
-                    .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produto.nome()));
-
-            if (produtoEntity.getQuantidade() == 0)  {
-                throw new RuntimeException("erro: Produto em falta: " + produto.nome());
+            if (produtoSemEstoque) {
+                listaDeProdutosIndisponiveis.add(produtoEntity.getNome());
+            } else {
+                produtosParaAtualizar.add(produtoEntity);
             }
 
-            // Adiciona o produto encontrado à lista
-            produtosEncontrados.add(new Produto(produtoEntity.getNome(), produtoEntity.getPreco(), produtoEntity.getQuantidade()- 1));
+        }
+
+        if (!listaDeProdutosIndisponiveis.isEmpty()) {
+            throw new RuntimeException("erro: Produto em falta: " + listaDeProdutosIndisponiveis);
+        }
+
+        for (ProdutoEntity produto : produtosParaAtualizar) {
+            produto.setQuantidade(produto.getQuantidade() - 1);
+            produtoRepository.save(produto);
+            carrinhoEntities.add(new CarrinhoEntity(produto.getNome()));
         }
 
 
 
+        ComprasEntity comprasEntity = new ComprasEntity(compras.cpf(), carrinhoEntities);
+        comprasRepository.save(comprasEntity);
 
-        return new Compras(clienteEntity.getCpf(), produtosEncontrados);
+
+        List<Carrinho> carrinhoResponse = carrinhoEntities
+                .stream()
+                .map(produtoEntity -> new Carrinho(produtoEntity.getNome()))
+                .toList();
+
+        
+        return new Compras(comprasEntity.getCpf(), carrinhoResponse);
+    }
+
+    private ProdutoEntity validarExistenciaProduto(Carrinho produtoCarrinho) {
+        return produtoRepository
+                .findById(produtoCarrinho.nome())
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produtoCarrinho.nome()));
+    }
+
+    private void validarCpf(Compras compras) {
+        clienteRepository
+                .findById(compras.cpf())
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
     }
 }
