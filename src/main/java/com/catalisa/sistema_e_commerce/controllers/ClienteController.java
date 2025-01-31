@@ -20,7 +20,6 @@ public class ClienteController {
         this.service = service;
     }
 
-    @Transactional
     @PostMapping
     public ResponseEntity<Cliente> criarCliente(@Valid @RequestBody Cliente cliente) {
         Cliente clienteSalvo = service.criarCliente(cliente);
