@@ -32,9 +32,9 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{cpf}")
-    public ResponseEntity<Void> deletarCliente (@Valid @PathVariable String cpf) {
+    public ResponseEntity<String> deletarCliente (@Valid @PathVariable String cpf) {
         service.excluirCliente(cpf);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Cliente deletado com sucesso!");
     }
 
     @GetMapping
