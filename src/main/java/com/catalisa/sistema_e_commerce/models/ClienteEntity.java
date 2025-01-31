@@ -5,7 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.br.CPF;
+
 
 
 @Entity
@@ -16,7 +17,7 @@ public class ClienteEntity {
 
 
     @NotNull(message = "O CPF não pode estar em branco!")
-    @Size(min = 11, max = 11, message = "O CPF deve conter exatamente 11 dígitos!")
+    @CPF(message = "O cpf informado deve ser um cpf válido!")
     @Column(unique = true)
     @Id
     private String cpf;
