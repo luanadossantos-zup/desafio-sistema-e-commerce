@@ -27,50 +27,63 @@ public class ComprasService {
 
         validarCpf(compras);
 
-
-        List<String> listaDeProdutosIndisponiveis = new ArrayList<>();
-        List<ProdutoEntity> produtosParaAtualizar = new ArrayList<>();
+        List<String> produtosIndisponiveis = new ArrayList<>();
+        List<ProdutoEntity> produtosDisponiveis = new ArrayList<>();
         List<CarrinhoEntity> carrinhoEntities = new ArrayList<>();
 
+        separarProdutosPorDisponibilidade(compras, produtosIndisponiveis, produtosDisponiveis);
+
+        if (!produtosIndisponiveis.isEmpty()) {
+            throw new RuntimeException("erro: Produto em falta: " + produtosIndisponiveis);
+        }
+
+        atualizarProdutosEstoqueBD(produtosDisponiveis, carrinhoEntities);
+
+        ComprasEntity comprasEntity = atualizarComprasBD(compras, carrinhoEntities);
+
+        List<Carrinho> carrinhoResponse = criarRespostaCarrinho(carrinhoEntities);
+
+        return new Compras(comprasEntity.getCpf(), carrinhoResponse);
+    }
+
+    private void separarProdutosPorDisponibilidade(Compras compras, List<String> produtosIndisponiveis, List<ProdutoEntity> produtosDisponiveis) {
         for (Carrinho produtoCarrinho : compras.produtos()) {
-            ProdutoEntity produtoEntity = validarExistenciaProduto(produtoCarrinho);
+            ProdutoEntity produtoEntity = validarExistenciaProdutoNoBD(produtoCarrinho);
 
             boolean produtoSemEstoque = produtoEntity.getQuantidade() <= 0;
 
             if (produtoSemEstoque) {
-                listaDeProdutosIndisponiveis.add(produtoEntity.getNome());
+                produtosIndisponiveis.add(produtoEntity.getNome());
             } else {
-                produtosParaAtualizar.add(produtoEntity);
+                produtosDisponiveis.add(produtoEntity);
             }
 
         }
+    }
 
-        if (!listaDeProdutosIndisponiveis.isEmpty()) {
-            throw new RuntimeException("erro: Produto em falta: " + listaDeProdutosIndisponiveis);
-        }
+    private static List<Carrinho> criarRespostaCarrinho(List<CarrinhoEntity> carrinhoEntities) {
+        return carrinhoEntities
+                .stream()
+                .map(produtoEntity -> new Carrinho(produtoEntity.getNome()))
+                .toList();
+    }
 
+    private ComprasEntity atualizarComprasBD(Compras compras, List<CarrinhoEntity> carrinhoEntities) {
+        ComprasEntity comprasEntity = new ComprasEntity(compras.cpf(), carrinhoEntities);
+        comprasRepository.save(comprasEntity);
+        return comprasEntity;
+    }
+
+    private void atualizarProdutosEstoqueBD(List<ProdutoEntity> produtosParaAtualizar, List<CarrinhoEntity> carrinhoEntities) {
         for (ProdutoEntity produto : produtosParaAtualizar) {
             produto.setQuantidade(produto.getQuantidade() - 1);
             produtoRepository.save(produto);
             carrinhoEntities.add(new CarrinhoEntity(produto.getNome()));
         }
-
-
-
-        ComprasEntity comprasEntity = new ComprasEntity(compras.cpf(), carrinhoEntities);
-        comprasRepository.save(comprasEntity);
-
-
-        List<Carrinho> carrinhoResponse = carrinhoEntities
-                .stream()
-                .map(produtoEntity -> new Carrinho(produtoEntity.getNome()))
-                .toList();
-
-        
-        return new Compras(comprasEntity.getCpf(), carrinhoResponse);
     }
 
-    private ProdutoEntity validarExistenciaProduto(Carrinho produtoCarrinho) {
+
+    private ProdutoEntity validarExistenciaProdutoNoBD(Carrinho produtoCarrinho) {
         return produtoRepository
                 .findById(produtoCarrinho.nome())
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado: " + produtoCarrinho.nome()));
