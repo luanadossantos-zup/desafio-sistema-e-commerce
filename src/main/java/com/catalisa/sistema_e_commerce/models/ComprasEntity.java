@@ -1,22 +1,24 @@
 package com.catalisa.sistema_e_commerce.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
-import java.util.ArrayList;
+import jakarta.persistence.*;
+import java.util.List;
 
 @Entity
 public class ComprasEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String cpf;
 
-    private ArrayList<Produto> produtos;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ProdutosComprasEntity> produtos;
 
     public ComprasEntity() {
     }
 
-    public ComprasEntity(String cpf, ArrayList<Produto> produtos) {
+    public ComprasEntity(String cpf, List<ProdutosComprasEntity> produtos) {
         this.cpf = cpf;
         this.produtos = produtos;
     }
@@ -29,11 +31,11 @@ public class ComprasEntity {
         this.cpf = cpf;
     }
 
-    public ArrayList<Produto> getProdutos() {
+    public List<ProdutosComprasEntity> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(ArrayList<Produto> produtos) {
+    public void setProdutos(List<ProdutosComprasEntity> produtos) {
         this.produtos = produtos;
     }
 }
