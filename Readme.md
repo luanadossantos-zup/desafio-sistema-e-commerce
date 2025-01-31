@@ -45,9 +45,9 @@ Certifique-se de que o ThunderClient está instalado no seu VS Code.
 
 GET /produtos → Retorna todos os produtos cadastrados.
 
-POST /produtos/{nome} → Cadastra um novo produto. Exemplo de JSON:
+POST /produtos → Cadastra um novo produto.
 
-   DELETE /produtos/{nome} → Deleta um produto pelo ID.
+   DELETE /produtos/{nome} → Deleta um produto pelo NOME.
     
 
 Exemplo de POST:
