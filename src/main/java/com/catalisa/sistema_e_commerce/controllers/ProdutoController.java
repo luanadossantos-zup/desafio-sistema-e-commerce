@@ -29,9 +29,9 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{nome}")
-    public ResponseEntity<Void> deletarProduto (@Valid @PathVariable String nome) {
+    public ResponseEntity<String> deletarProduto (@Valid @PathVariable String nome) {
         service.excluirProduto(nome);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Produto deletado com sucesso");
     }
 
     @GetMapping
