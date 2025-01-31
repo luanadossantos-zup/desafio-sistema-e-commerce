@@ -1,4 +1,6 @@
 package com.catalisa.sistema_e_commerce.models;
 
-public record ProdutoCompra() {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record ProdutosCompras(@JsonProperty("nome") String nome) {
 }
