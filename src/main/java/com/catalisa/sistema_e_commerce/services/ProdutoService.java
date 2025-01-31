@@ -19,40 +19,39 @@ public class ProdutoService {
 
 
     public Produto criarProduto(@Valid Produto produto) {
-        ProdutoEntity entidade = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
+        ProdutoEntity entity = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
 
-        if(produtoRepository.existsById(entidade.getNome())) {
-            throw new RuntimeException("Produto com o nome " + entidade.getNome() + " já existe!");
+        boolean nomeProdutoJaExiste = produtoRepository.existsById(entity.getNome());
+
+        if(nomeProdutoJaExiste) {
+            throw new RuntimeException("Produto com o nome " + entity.getNome() + " já existe!");
         } else {
-            ProdutoEntity entidadeSalva = produtoRepository.save(entidade);
+            ProdutoEntity entidadeSalva = produtoRepository.save(entity);
             return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
         }
-
 
     }
 
     public Produto atualizaProduto(@Valid String nomeId, Produto produtoAtualizado) {
 
-        ProdutoEntity entidadeExistente = produtoRepository.findById(nomeId)
+        ProdutoEntity entidadeExistente = produtoRepository
+                .findById(nomeId)
                 .orElseThrow(() -> new RuntimeException(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado."));
-
 
         entidadeExistente.setNome(produtoAtualizado.nome());
         entidadeExistente.setPreco(produtoAtualizado.preco());
         entidadeExistente.setQuantidade(produtoAtualizado.quantidade());
 
-
         ProdutoEntity entidadeSalva = produtoRepository.save(entidadeExistente);
-
 
         return new Produto(entidadeSalva.getNome(), entidadeSalva.getPreco(), entidadeSalva.getQuantidade());
     }
 
     public void excluirProduto(String nomeId) {
 
-        boolean entidadeExiste = produtoRepository.existsById(nomeId);
+        boolean produtoExiste = produtoRepository.existsById(nomeId);
 
-        if (entidadeExiste) {
+        if (produtoExiste) {
             produtoRepository.deleteById(nomeId);
         } else {
             System.out.println(PRODUTO_SERVICE + "produto com o nome " + nomeId + " não foi encontrado.");
@@ -62,7 +61,9 @@ public class ProdutoService {
     }
 
     public List<Produto> listarTodosProdutos() {
-        return produtoRepository.findAll().stream()
+        return produtoRepository
+                .findAll()
+                .stream()
                 .map(entity -> new Produto(entity.getNome(), entity.getPreco(), entity.getQuantidade()))
                 .collect(Collectors.toList());
     }
