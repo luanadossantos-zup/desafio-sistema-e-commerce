@@ -2,11 +2,15 @@ package com.catalisa.sistema_e_commerce.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class ProdutosComprasEntity {
 
     @Id
+    @NotNull
+    @NotEmpty
     private String nome;
 
     public ProdutosComprasEntity() {
