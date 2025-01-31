@@ -23,7 +23,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleTransactionSystemException(TransactionSystemException ex) {
         Throwable cause = ex.getRootCause();
         if (cause instanceof ConstraintViolationException constraintViolationException) {
-            Map<String, String> errors = constraintViolationException.getConstraintViolations()
+            Map<String, String> errors = constraintViolationException
+                    .getConstraintViolations()
                     .stream()
                     .collect(Collectors.toMap(
                             violation ->
