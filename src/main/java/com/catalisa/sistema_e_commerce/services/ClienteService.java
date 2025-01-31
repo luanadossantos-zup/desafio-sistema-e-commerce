@@ -28,21 +28,10 @@ public class ClienteService {
 
     }
 
-    private void validaCpf(ClienteEntity entidade) {
-        if(clienteRepository.existsById(entidade.getCpf())) {
-            throw new RuntimeException("Cliente com o cpf " + entidade.getCpf() + " já existe!");
-        }
-    }
-
-    private void validaEmail(ClienteEntity entidade) {
-        if (clienteRepository.existsByEmail(entidade.getEmail())) {
-            throw new RuntimeException("Cliente com o e-mail " + entidade.getEmail() + " já existe!");
-        }
-    }
-
     public Cliente atualizarCliente (@Valid String cpf,Cliente clienteAtualizado) {
 
-        ClienteEntity entidadeExistente = clienteRepository.findById(cpf)
+        ClienteEntity entidadeExistente = clienteRepository
+                .findById(cpf)
                 .orElseThrow(() -> new RuntimeException(CLIENTE_SERVICE + "produto com o nome " + cpf + " não foi encontrado."));
 
         entidadeExistente.setNome(clienteAtualizado.nome());
@@ -67,11 +56,27 @@ public class ClienteService {
     }
 
     public List<Cliente> listarTodosClientes() {
-        return clienteRepository.findAll().stream()
+        return clienteRepository
+                .findAll()
+                .stream()
                 .map(entity -> new Cliente(entity.getNome(), entity.getCpf(), entity.getEmail()))
                 .collect(Collectors.toList());
     }
 
+    private void validaCpf(ClienteEntity entidade) {
+        boolean cpfJaExisteNoBD = clienteRepository.existsById(entidade.getCpf());
+        if(cpfJaExisteNoBD) {
+            throw new RuntimeException("Cliente com o cpf " + entidade.getCpf() + " já existe!");
+        }
+    }
+
+    private void validaEmail(ClienteEntity entidade) {
+        boolean emailJaExisteNoBD = clienteRepository.existsByEmail(entidade.getEmail());
+
+        if (emailJaExisteNoBD) {
+            throw new RuntimeException("Cliente com o e-mail " + entidade.getEmail() + " já existe!");
+        }
+    }
 
 
 }
