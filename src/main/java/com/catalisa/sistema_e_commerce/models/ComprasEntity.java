@@ -13,12 +13,12 @@ public class ComprasEntity {
     private String cpf;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<ProdutosComprasEntity> produtos;
+    private List<CarrinhoEntity> produtos;
 
     public ComprasEntity() {
     }
 
-    public ComprasEntity(String cpf, List<ProdutosComprasEntity> produtos) {
+    public ComprasEntity(String cpf, List<CarrinhoEntity> produtos) {
         this.cpf = cpf;
         this.produtos = produtos;
     }
@@ -31,11 +31,11 @@ public class ComprasEntity {
         this.cpf = cpf;
     }
 
-    public List<ProdutosComprasEntity> getProdutos() {
+    public List<CarrinhoEntity> getProdutos() {
         return produtos;
     }
 
-    public void setProdutos(List<ProdutosComprasEntity> produtos) {
+    public void setProdutos(List<CarrinhoEntity> produtos) {
         this.produtos = produtos;
     }
 }
