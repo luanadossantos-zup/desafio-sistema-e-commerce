@@ -1,6 +1,6 @@
 package com.catalisa.sistema_e_commerce.models;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public record Compras(String cpf, ArrayList<Produto> produto) {
+public record Compras(String cpf, List<ProdutosCompras> produtos) {
 }
