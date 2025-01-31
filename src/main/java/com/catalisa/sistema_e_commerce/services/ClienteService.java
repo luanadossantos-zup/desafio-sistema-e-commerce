@@ -55,6 +55,12 @@ public class ClienteService {
         clienteRepository.deleteById(cpfId);
     }
 
+    public Cliente buscarClientePorCpf(String cpf) {
+        ClienteEntity entity = clienteRepository.findById(cpf)
+                .orElseThrow(() -> new RuntimeException("Cliente não encontrado."));
+        return new Cliente(entity.getNome(), entity.getCpf(), entity.getEmail());
+    }
+
     public List<Cliente> listarTodosClientes() {
         return clienteRepository
                 .findAll()
