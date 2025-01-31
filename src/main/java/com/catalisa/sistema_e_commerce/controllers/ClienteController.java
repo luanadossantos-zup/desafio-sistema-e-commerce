@@ -37,6 +37,11 @@ public class ClienteController {
         return ResponseEntity.ok("Cliente deletado com sucesso!");
     }
 
+    @RequestMapping(value = "/{cpf}", method = RequestMethod.GET)
+    public ResponseEntity<Cliente> getProductById(@Valid @PathVariable String cpf) {
+        return ResponseEntity.ok(service.buscarClientePorCpf(cpf));
+    }
+
     @GetMapping
     public  ResponseEntity<List<Cliente>> listarTodosClientes () {
         return ResponseEntity.ok(service.listarTodosClientes());
