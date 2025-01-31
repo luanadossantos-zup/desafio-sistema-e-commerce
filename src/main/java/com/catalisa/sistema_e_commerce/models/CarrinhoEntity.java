@@ -6,17 +6,17 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class ProdutosComprasEntity {
+public class CarrinhoEntity {
 
     @Id
     @NotNull
     @NotEmpty
     private String nome;
 
-    public ProdutosComprasEntity() {
+    public CarrinhoEntity() {
     }
 
-    public ProdutosComprasEntity(String nome) {
+    public CarrinhoEntity(String nome) {
         this.nome = nome;
     }
 
