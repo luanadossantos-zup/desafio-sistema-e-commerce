@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -13,16 +14,19 @@ public class ProdutoEntity {
 
 
 
-    @NotNull(message = "O nome não pode estar em branco!")
+    @NotNull(message = "O nome não pode estar nulo!")
+    @NotEmpty(message = "O nome não pode estar vazio!")
     @Column(unique = true)
     @Id
     private String nome;
 
-    @NotNull(message = "O preço não pode estar em branco!")
+    @NotNull(message = "O preço não pode estar nulo!")
+    @NotEmpty(message = "O preço não pode estar vazio!")
     @DecimalMin(value = "0.1", message = "O preço deve ser maior que 0!")
     private Double preco;
 
-    @NotNull(message = "A quantidade não pode estar em branco!")
+    @NotNull(message = "A quantidade não pode estar nulo!")
+    @NotEmpty(message = "A quantidade não pode estar vazia!")
     @Min(value = 0, message = "Quantidade mínima não pode ser negativa!")
     private int quantidade;
 

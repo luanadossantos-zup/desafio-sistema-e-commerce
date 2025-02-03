@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -12,7 +13,8 @@ import org.hibernate.validator.constraints.br.CPF;
 @Entity
 public class ClienteEntity {
 
-    @NotNull(message = "O nome não pode estar em branco!")
+    @NotNull(message = "O nome não pode ser nulo!")
+    @NotEmpty(message = "O nome não pode estar vazio!")
     private String nome;
 
 
@@ -23,7 +25,8 @@ public class ClienteEntity {
     private String cpf;
 
     @Email
-    @NotNull(message = "O email não pode estar em branco!")
+    @NotNull(message = "O email não pode ser nulo!")
+    @NotEmpty(message = "O e-mail não pode estar vazio!")
     @Column(unique = true)
     private String email;
 

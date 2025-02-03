@@ -9,8 +9,8 @@ import jakarta.validation.constraints.NotNull;
 public class CarrinhoEntity {
 
     @Id
-    @NotNull
-    @NotEmpty
+    @NotNull (message = "O nome não pode ser nulo!")
+    @NotEmpty(message = "O nome não pode estar vazio!")
     private String nome;
 
     public CarrinhoEntity() {
