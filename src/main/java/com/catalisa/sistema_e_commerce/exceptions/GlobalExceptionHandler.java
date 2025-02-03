@@ -45,7 +45,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         Throwable cause = ex.getCause();
         if (cause instanceof InvalidFormatException invalidFormatException) {
-            String fieldName = invalidFormatException.getPath().stream().map(JsonMappingException.Reference::getFieldName).findFirst().orElse("desconhecido");
+            String fieldName = invalidFormatException.getPath()
+                    .stream()
+                    .map(JsonMappingException.Reference::getFieldName)
+                    .findFirst()
+                    .orElse("desconhecido");
             String message = String.format("O campo '%s' possui um valor inválido: %s", fieldName, invalidFormatException.getValue());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", message));
         } else if (cause instanceof MismatchedInputException mismatchedInputException) {
@@ -58,7 +62,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult()
-                .getFieldErrors().stream().collect(Collectors.toMap(
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
                         fieldError -> fieldError.getField(),
                         fieldError -> fieldError.getDefaultMessage()
                 ));
