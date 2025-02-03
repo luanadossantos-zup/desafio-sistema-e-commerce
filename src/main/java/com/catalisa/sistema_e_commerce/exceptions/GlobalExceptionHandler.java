@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -53,4 +54,15 @@ public class GlobalExceptionHandler {
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Erro ao processar o JSON enviado."));
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors().stream().collect(Collectors.toMap(
+                        fieldError -> fieldError.getField(),
+                        fieldError -> fieldError.getDefaultMessage()
+                ));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
 }
+
