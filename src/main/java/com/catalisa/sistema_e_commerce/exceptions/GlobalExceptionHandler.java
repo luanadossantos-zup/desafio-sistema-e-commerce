@@ -32,13 +32,13 @@ public class GlobalExceptionHandler {
                     .getConstraintViolations()
                     .stream()
                     .collect(Collectors.toMap(
-                            violation ->
-                                    violation.getPropertyPath().toString(),
-                                    ConstraintViolation::getMessage
+                            violation -> violation.getPropertyPath().toString(),
+                            ConstraintViolation::getMessage
                     ));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
         }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Erro interno no servidor"));
+        ex.printStackTrace(); // Adicione logs para depuração
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("TransactionSystemException", "Erro ao processar o JSON enviado. Verifique os campos e valores informados."));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
             String message = "Erro no formato do JSON enviado. Verifique os campos e valores.";
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", message));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Erro ao processar o JSON enviado."));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error HttpMessageNotReadableException", "Erro ao processar o JSON enviado. Verifique os campos e valores informados."));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
