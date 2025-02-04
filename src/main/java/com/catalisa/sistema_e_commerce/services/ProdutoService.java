@@ -3,6 +3,7 @@ package com.catalisa.sistema_e_commerce.services;
 import com.catalisa.sistema_e_commerce.models.Produto;
 import com.catalisa.sistema_e_commerce.models.ProdutoEntity;
 import com.catalisa.sistema_e_commerce.repository.ProdutoRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,17 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private final String PRODUTO_SERVICE = "ProductService:: ";
 
-
+    @Transactional
     public Produto criarProduto(@Valid Produto produto) {
         ProdutoEntity entity = new ProdutoEntity(produto.nome(), produto.preco(), produto.quantidade());
 
         boolean nomeProdutoJaExiste = produtoRepository.existsById(entity.getNome());
+        boolean nomeDoProdutoEmBranco = produto.nome() == null || produto.nome().isEmpty();
+
+
+        if (nomeDoProdutoEmBranco) {
+            throw new RuntimeException("nome: Nome não deve estar em branco!");
+        }
 
         if(nomeProdutoJaExiste) {
             throw new RuntimeException("Produto com o nome " + entity.getNome() + " já existe!");
