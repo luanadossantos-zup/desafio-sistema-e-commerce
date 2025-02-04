@@ -21,12 +21,10 @@ public class ProdutoEntity {
     private String nome;
 
     @NotNull(message = "O preço não pode estar nulo!")
-    @NotEmpty(message = "O preço não pode estar vazio!")
     @DecimalMin(value = "0.1", message = "O preço deve ser maior que 0!")
     private Double preco;
 
     @NotNull(message = "A quantidade não pode estar nulo!")
-    @NotEmpty(message = "A quantidade não pode estar vazia!")
     @Min(value = 0, message = "Quantidade mínima não pode ser negativa!")
     private int quantidade;
 
